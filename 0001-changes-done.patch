@@ -1,0 +1,84 @@
+From 4eb3e5fd40242e30ec40b5551300b536eb720a89 Mon Sep 17 00:00:00 2001
+From: "pankajkorkalai@gmail.com" <PankajKorkalai>
+Date: Mon, 5 Feb 2024 16:19:55 +0530
+Subject: [PATCH] changes done
+
+---
+ client3.py            | 25 +++++++++++++++++++++----
+ tempCodeRunnerFile.py | 12 ++++++++++++
+ 2 files changed, 33 insertions(+), 4 deletions(-)
+ create mode 100644 tempCodeRunnerFile.py
+
+diff --git a/client3.py b/client3.py
+index 3fc09b7..67abb4e 100644
+--- a/client3.py
++++ b/client3.py
+@@ -35,25 +35,42 @@ def getDataPoint(quote):
+     stock = quote['stock']
+     bid_price = float(quote['top_bid']['price'])
+     ask_price = float(quote['top_ask']['price'])
+-    price = bid_price
++    price = (bid_price + ask_price)/2
+     return stock, bid_price, ask_price, price
+ 
+ 
+ def getRatio(price_a, price_b):
+     """ Get ratio of price_a and price_b """
+     """ ------------- Update this function ------------- """
+-    return 1
++    if (price_b == 0):
++        return  # Handle division by zero, you can choose to return something else or raise an exception
++
++    return price_a / price_b
++
++
++# Rest of the code remains unchanged
++
+ 
+ 
+ # Main
+ if __name__ == "__main__":
+     # Query the price once every N seconds.
+     for _ in iter(range(N)):
++        # Dictionary to store stock prices
++        prices = {}
++
+         quotes = json.loads(urllib.request.urlopen(QUERY.format(random.random())).read())
+ 
+-        """ ----------- Update to get the ratio --------------- """
++        # Collect data points for each stock
+         for quote in quotes:
+             stock, bid_price, ask_price, price = getDataPoint(quote)
+             print("Quoted %s at (bid:%s, ask:%s, price:%s)" % (stock, bid_price, ask_price, price))
+ 
+-        print("Ratio %s" % getRatio(price, price))
++            # Store the price for each stock
++            prices[stock] = price
++
++        # Calculate and print the ratio for each stock
++        for stock, price in prices.items():
++            ratio = getRatio(price, price)
++            print("Ratio for %s: %s" % (stock, ratio))
++
+diff --git a/tempCodeRunnerFile.py b/tempCodeRunnerFile.py
+new file mode 100644
+index 0000000..a174e37
+--- /dev/null
++++ b/tempCodeRunnerFile.py
+@@ -0,0 +1,12 @@
++
++    """ ------------- Update this function ------------- """
++    return 1
++
++
++# Main
++if __name__ == "__main__":
++    # Query the price once every N seconds.
++    for _ in iter(range(N)):
++        quotes = json.loads(urllib.request.urlopen(QUERY.format(random.random())).read())
++
++        """ ----------- Update to get the ratio --------------- """
+\ No newline at end of file
+-- 
+2.43.0.windows.1
+
